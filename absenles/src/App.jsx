@@ -12,11 +12,10 @@ import {
 const API_URL = "https://script.google.com/macros/s/AKfycbwyGKsYPR0m0j3J4LtwThc9xuHnlRjAAogX4cu4R3KVagGxCLEju9_PZCukKkMBsQmBfQ/exec".trim();
 
 // ─────────────────────────────────────────────────────────────
-// Komponen Avatar Lucu Otomatis (FITUR BARU)
+// Komponen Avatar Lucu Otomatis
 // ─────────────────────────────────────────────────────────────
 const StudentAvatar = ({ name, size = "md" }) => {
   const s = size === "sm" ? "w-8 h-8" : size === "lg" ? "w-20 h-20" : "w-10 h-10";
-  // Menggunakan style 'notionists' atau 'adventurer' agar terlihat premium dan lucu
   const avatarUrl = `https://api.dicebear.com/7.x/notionists/svg?seed=${encodeURIComponent(name)}&backgroundColor=b6e3f4,c0aede,d1d4f9,ffd5dc`;
   
   return (
@@ -27,7 +26,7 @@ const StudentAvatar = ({ name, size = "md" }) => {
 };
 
 // ─────────────────────────────────────────────────────────────
-// Komponen gambar via Proxy Apps Script (KODE DARI ANDA)
+// Komponen gambar via Proxy Apps Script
 // ─────────────────────────────────────────────────────────────
 const ProxyImage = ({ fileId, alt, className }) => {
   const [src, setSrc] = useState(null);
@@ -128,7 +127,7 @@ const formatFullDateIndo = (dateStr) => {
 };
 
 // ─────────────────────────────────────────────────────────────
-// Komponen Rekap Bulanan (FIXED: BISA MINIMIZE)
+// Komponen Rekap Bulanan (FITUR MINIMIZE)
 // ─────────────────────────────────────────────────────────────
 const RekapBulanan = ({ attendance }) => {
   const [bulanAktif, setBulanAktif] = useState(null);
@@ -495,7 +494,6 @@ const App = () => {
             
             {reportData && (
               <div className="space-y-8 animate-in zoom-in-95">
-                {/* HEAD HAS AVATAR (FITUR BARU) */}
                 <div className="bg-white rounded-3xl p-8 border border-slate-100 shadow-sm flex items-center gap-6 overflow-hidden relative">
                    <div className="absolute top-0 right-0 p-8 opacity-[0.03] rotate-12 pointer-events-none"><GraduationCap size={120} /></div>
                    <StudentAvatar name={reportData.name} size="lg" />
@@ -535,12 +533,17 @@ const App = () => {
                         </div>
                       ))}
 
-                      {!showAllPhotos && reportData.dailyGallery.length > 3 && (
+                      {/* TOMBOL TOGGLE (DIPERBAIKI: BISA SHOW LESS) */}
+                      {reportData.dailyGallery.length > 3 && (
                         <button 
-                          onClick={() => setShowAllPhotos(true)}
+                          onClick={() => setShowAllPhotos(!showAllPhotos)}
                           className="w-full py-4 bg-slate-50 text-slate-500 rounded-2xl font-bold flex items-center justify-center gap-2 hover:bg-slate-100 transition-all border border-dashed border-slate-200"
                         >
-                          Lihat Dokumentasi Lengkap ({reportData.dailyGallery.length - 3} Hari Lainnya) <ChevronDown size={18} />
+                          {showAllPhotos ? (
+                            <><ChevronUp size={18} /> Sembunyikan Dokumentasi (Kembali ke 3 Hari Terakhir)</>
+                          ) : (
+                            <><ChevronDown size={18} /> Lihat Dokumentasi Lengkap ({reportData.dailyGallery.length - 3} Hari Lainnya)</>
+                          )}
                         </button>
                       )}
                     </div>
@@ -603,7 +606,7 @@ const App = () => {
                         {photoPreviews.length < 3 && (
                           <label className="aspect-square border-2 border-dashed border-slate-200 rounded-lg flex flex-col items-center justify-center text-slate-400 hover:bg-slate-50 cursor-pointer transition-all hover:border-slate-300">
                             <Camera size={20} />
-                            <span className="text-[10px] mt-1 font-bold">AMBIL</span>
+                            <span className="text-[10px] mt-1 font-bold text-center">AMBIL</span>
                             <input type="file" accept="image/*" className="hidden" onChange={handlePhotoChange} multiple />
                           </label>
                         )}
@@ -625,7 +628,7 @@ const App = () => {
                      submitStatus === 'success' ? <><CheckCircle2 size={24}/> Laporan Terkirim!</> : 
                      <><Send size={24}/> SIMPAN LAPORAN HARI INI</>}
                    </button>
-                   <p className="text-center mt-4 text-sm text-slate-400 italic">Data presensi dan foto disimpan secara otomatis ke Spreadsheet dan Drive.</p>
+                   <p className="text-center mt-4 text-sm text-slate-400 italic">Data disimpan secara otomatis ke Spreadsheet dan Drive.</p>
                 </div>
               </div>
             )}
